@@ -5,49 +5,66 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "Name is required"],
-      trim: true,
+      required: true,
+      trim: true
     },
 
     email: {
       type: String,
-      required: [true, "Email is required"],
+      required: true,
       unique: true,
       lowercase: true,
-      trim: true,
+      trim: true
     },
 
     password: {
       type: String,
-      required: [true, "Password is required"],
+      required: true,
       minlength: 6,
+      select: false
     },
 
     role: {
       type: String,
-      enum: ["admin", "driver", "passenger"],
-      default: "passenger",
+      enum: [
+        "hq_admin",
+        "province_admin",
+        "district_officer",
+        "station_officer",
+        "device"
+      ],
+      default: "station_officer"
     },
+
+    province: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Province"
+    },
+
+    district: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "District"
+    },
+
+    policeStation: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "PoliceStation"
+    }
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-// Encrypt password before saving
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function () {
   if (!this.isModified("password")) {
-    return next();
+    return;
   }
 
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  next();
 });
 
-// Compare login password
 userSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+  return bcrypt.compare(enteredPassword, this.password);
 };
 
 const User = mongoose.model("User", userSchema);
