@@ -26,12 +26,16 @@ if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
 
+// app.get("/", (req, res) => {
+//   res.json({
+//     success: true,
+//     message: "Tuk-Tuk Tracking API is running.",
+//     docs: "/api-docs"
+//   });
+// });
+
 app.get("/", (req, res) => {
-  res.json({
-    success: true,
-    message: "Tuk-Tuk Tracking API is running.",
-    docs: "/api-docs"
-  });
+  res.redirect("/api-docs");
 });
 
 app.get("/api/health", (req, res) => {
