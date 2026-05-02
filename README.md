@@ -18,7 +18,7 @@ This is a RESTful Web API for real-time tuk-tuk tracking and movement logging fo
 
 ## Main Features
 
-- User authentication
+- User authentication 
 - Role-based access control
 - Province management
 - District management
